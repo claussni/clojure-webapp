@@ -1,4 +1,5 @@
-(ns webapp.things)
+(ns webapp.things
+  (:import (java.util UUID)))
 
 (def -things
   [{:id "thing1"}
@@ -10,3 +11,7 @@
 
 (defn find-by-id [id]
   (some #(if (= (:id %) id) %) -things))
+
+(defn new [body]
+  (println "new body: " body)
+  (str (UUID/randomUUID)))
