@@ -7,5 +7,5 @@
 (defn find-by-id [id]
   (some #(if (= (:id %) id) %) @things))
 
-(defn new [id]
-  (swap! things concat [{:id id}]))
+(defn new [id & [body]]
+  (swap! things concat [{:id id :body body}]))
