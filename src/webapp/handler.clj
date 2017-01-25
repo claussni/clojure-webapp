@@ -6,13 +6,8 @@
     [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
     [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
     [ring.util.response :refer [response created]]
-    [webapp.things :as things]))
-
-(defn apply-if [fn pred arg]
-  (if (pred arg) (fn arg) arg))
-
-(defn safe [fn arg]
-  (apply-if fn some? arg))
+    [webapp.things :as things]
+    [webapp.util :refer :all]))
 
 (defroutes app-routes
            (GET "/" [] "World of Things")
@@ -25,22 +20,10 @@
                  (created (str context "/" newid) body))))
            (route/not-found "Not Found"))
 
-(defn dump-handler-response [handler]
-  (fn [request]
-    (let [response (handler request)]
-      (println "<== RESPONSE" response)
-      response)))
-
-(defn dump-handler-request [handler]
-  (fn [request]
-    (println "==> REQUEST" request)
-    (handler request)))
-
 (def app
   (-> app-routes
       (dump-handler-request)
       (wrap-json-body)
       (wrap-json-response)
       (wrap-defaults api-defaults)
-      (dump-handler-response)
-      ))
+      (dump-handler-response)))
