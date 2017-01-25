@@ -1,4 +1,5 @@
 (ns webapp.handler
+  (:import (java.util UUID))
   (:require
     [compojure.core :refer :all]
     [compojure.route :as route]
@@ -19,7 +20,9 @@
              (GET "/" [] (safe response (things/find-all)))
              (GET "/:id" [id] (safe response (things/find-by-id id)))
              (POST "/" {body :body context :context}
-               (created (str context "/" (things/new body)) body)))
+               (let [newid (str (UUID/randomUUID))]
+                 (things/new newid)
+                 (created (str context "/" newid) body))))
            (route/not-found "Not Found"))
 
 (defn dump-handler-response [handler]
